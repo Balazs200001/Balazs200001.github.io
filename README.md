@@ -2,7 +2,7 @@
 
 <video style="max-width: 66rem; width: 100%;" controls src="./assets/26-01-14_17-39-01.mp4" title="500k16R7P10G"></video>
 
-Strand-based hair rendering is one of those techniques that looks deceptively simple on paper but quickly becomes a performance nightmare at scale. Unlike shell-based or card-based approaches where hair is faked with textured surfaces, strand-based rendering treats each hair as an individual curve—giving you realistic motion, proper silhouettes, and physically-based lighting. The cost? You're now dealing with tens of thousands of tiny primitives, each needing physics simulation every frame.
+Strand-based hair rendering is one of those techniques that looks deceptively simple on paper but quickly becomes a performance nightmare at scale. Unlike shell-based or card-based approaches where hair is faked with textured surfaces, strand-based rendering treats each hair as an individual curve, giving you realistic motion, proper silhouettes, and physically-based lighting. The cost? You're now dealing with tens of thousands of tiny primitives, each needing physics simulation every frame.
 
 The solution used by production systems like AMD TressFX and Frostbite's hair pipeline is guide strand interpolation:
 
@@ -290,7 +290,7 @@ float3 CatmullRom(float3 p0, float3 p1, float3 p2, float3 p3, float t)
 }
 ```
 
-Remember that we only simulate physics on guide strands. At render time, non-guide strands need to derive their positions from nearby guides. This happens in this function:
+Remember that we only simulate physics on guide strands. At render time, non guide strands need to derive their positions from nearby guides. This happens in this function:
 
 ```cpp
 float3 EvaluateStrandPosition(uint strandIndex, uint rungIndex, srt::hair_srt* srt)
@@ -337,7 +337,7 @@ By taking the cross product of the tangent and the view direction, we get a vect
 
 ![alt text](./assets/image-2.png)
 
-Mesh shaders let us share data between threads using thread group memory. Since multiple threads need access to the same rung positions (for tangent calculation), we compute positions once and store them in shared memory:
+Mesh shaders let us share data between threads using thread group memory. After subdividing the strand, each strand is a series of sample points I call rungs. Since multiple threads need the same rung positions for tangent calculation, we compute them once and store them in shared memory:
 
 ```cpp
 thread_group_memory rung_data g_rungData[NUM_THREADS / 2];
