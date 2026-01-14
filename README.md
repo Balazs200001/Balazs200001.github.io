@@ -438,7 +438,7 @@ Building a strand-based hair rendering system involves balancing visual fidelity
 - **Importable hair grooms:** Artists can make and export hair grooms which would represent the rest positions and other parameters per strand.
 - **Dynamic LOD system:** I could implement an LOD system that changes the amount of rendered segments per hair strand based on distance as well as other LOD techniques for hair
 
-## Refrences
+## References
 
 - [AMD TressFX](https://github.com/GPUOpen-Effects/TressFX/tree/master): AMD's strand based hair implementation
 - [Robin Taillandier & Jon Valdes - Every Strand Counts: Physics and Rendering Behind Frostbite’s Hair](https://www.youtube.com/watch?v=ool2E8SQPGU): Presentation of Frostbite's strand based hair implementation
