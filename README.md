@@ -408,6 +408,11 @@ float3 t = normalize(input.tangent + noiseOffset);
 
 And for simple and cheap ambient occlusion, I darken strands near their roots where self shadowing would naturally occur:
 
+```cpp
+float aoFactor = lerp(srt->rootDarkening, 1.0, input.rungIndex);
+finalColor *= aoFactor;
+```
+
 ![AO](./assets/image-5.png)
 
 This is a crude approximation of proper deep opacity maps, but adds significant depth to the final render.
