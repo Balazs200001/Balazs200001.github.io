@@ -1,6 +1,6 @@
 # How to Make Strand-Based Hair Rendering Fast
 
-<video style="max-width: 66rem; width: 100%;" controls src="./assets/26-01-14_17-39-01.mp4" title="500k16R7P10G"></video>
+<video style="max-width: 66rem; width: 100%;" controls src="./assets/26-01-15_14-54-05.mp4" title="100k16R7P10G"></video>
 
 Strand-based hair rendering is one of those techniques that looks deceptively simple on paper but quickly becomes a performance nightmare at scale. Unlike shell-based or card-based approaches where hair is faked with textured surfaces, strand-based rendering treats each hair as an individual curve, giving you realistic motion, proper silhouettes, and physically-based lighting. The cost? You're now dealing with tens of thousands of tiny primitives, each needing physics simulation every frame.
 
@@ -359,7 +359,7 @@ if (side == 0 && tid < output.vertCount)
     {
         tangent = g_rungData[baseRung + 1].position - g_rungData[baseRung].position;
     }
-    else if (rungIndex >= maxRung)
+    else if (rungIndex == maxRung)
     {
         tangent = g_rungData[baseRung + maxRung].position - g_rungData[baseRung + maxRung - 1].position;
     }
@@ -392,7 +392,7 @@ float sinTL = sqrt(max(0.0, 1.0 - TdotL * TdotL));
 float diffuse = srt->diffuseReflCoef * sinTL;
 float specular = srt->specularReflCoef * pow(dot(t, l) * TdotE + sinTL * sinTE, srt->phongExponent);
 
-finalColor += (srt->hairColor * diffuse + float3(1.f, 1.f, 1.f) * specular) * dirLight.color * dirLight.intensity * 0.001f;
+finalColor += (srt->hairColor * diffuse + srt->hairSpecColor * specular) * dirLight.color * dirLight.intensity * 0.001f;
 ```
 
 ![Kajiya-Kay](./assets/image-4.png)
@@ -427,13 +427,23 @@ After this I changed the ratio of guide strands to 1:10 and my physics simulatio
 
 The visual difference between simulating all strands versus just 10% of them is barely perceptible showcased in the two videos below. The first one is simulating all the strands and the second one has a guide strand ratio of 1:10 strands.
 
-<video style="max-width: 66rem; width: 100%;" controls src="./assets/26-01-14_22-07-58.mp4" title="All strands simulated"></video>
+<video style="max-width: 66rem; width: 100%;" controls src="./assets/26-01-15_15-02-03.mp4" title="All strands simulated"></video>
 
-<video style="max-width: 66rem; width: 100%;" controls src="./assets/26-01-14_22-09-29.mp4" title="10% simulated"></video>
+<video style="max-width: 66rem; width: 100%;" controls src="./assets/26-01-15_14-54-05.mp4" title="100k16R7P10G"></video>
 
 ## Conclusion
 
 Building a strand-based hair rendering system involves balancing visual fidelity against computational cost at every stage. The guide strand interpolation approach which simulates only 10% of strands while interpolating the rest, delivered a 12x reduction in physics simulation time (5.75ms → 0.47ms) with only a modest 0.4ms increase in rendering cost. The visual difference is negligible, validating why this technique has become standard in production systems like TressFX and Frostbite's hair pipeline.
+
+Here are some more examples of different diffuse and specular colors:
+
+![golden blonde](./assets/golden-blonde.png)
+
+![red](./assets/red.png)
+
+![black](./assets/black.png)
+
+![green](./assets/green.png)
 
 ## Further improvements
 
