@@ -417,6 +417,16 @@ finalColor *= aoFactor;
 
 This is a crude approximation of proper deep opacity maps, but adds significant depth to the final render.
 
+Here are some more examples of different diffuse and specular colors:
+
+![golden blonde](./assets/golden-blonde.png)
+
+![red](./assets/red.png)
+
+![black](./assets/black.png)
+
+![green](./assets/green.png)
+
 ## Performance results
 
 Because I set up my implementation in a way that it's super easy to change how many hair segments my guide strands have when doing physics simulation, how many segments the strands get divided into when tessellating the strands and how many guide strands there are per interpolation strand I can easily profile my performance gain by checking the difference in physics simulation and render times.
@@ -434,16 +444,6 @@ The visual difference between simulating all strands versus just 10% of them is 
 ## Conclusion
 
 Building a strand-based hair rendering system involves balancing visual fidelity against computational cost at every stage. The guide strand interpolation approach which simulates only 10% of strands while interpolating the rest, delivered a 12x reduction in physics simulation time (5.75ms → 0.47ms) with only a modest 0.4ms increase in rendering cost. The visual difference is negligible, validating why this technique has become standard in production systems like TressFX and Frostbite's hair pipeline.
-
-Here are some more examples of different diffuse and specular colors:
-
-![golden blonde](./assets/golden-blonde.png)
-
-![red](./assets/red.png)
-
-![black](./assets/black.png)
-
-![green](./assets/green.png)
 
 ## Further improvements
 
