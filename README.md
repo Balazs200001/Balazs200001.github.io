@@ -456,7 +456,9 @@ Building a strand-based hair rendering system involves balancing visual fidelity
 ## References
 
 - [AMD TressFX](https://github.com/GPUOpen-Effects/TressFX/tree/master): AMD's strand based hair implementation
+
 - [Robin Taillandier & Jon Valdes - Every Strand Counts: Physics and Rendering Behind Frostbite’s Hair](https://www.youtube.com/watch?v=ool2E8SQPGU): Presentation of Frostbite's strand based hair implementation
+
 - [SIGGRAPH 2025 Advances: STRAND-BASED HAIR AND FUR RENDERING IN INDIANA JONES AND THE GREAT CIRCLE](https://www.youtube.com/watch?v=jSE1XXBEK-w): Presentation on the hair implementation in the new Indiana Jones game.
 
 - [[Kajiya and Kay 1989] Rendering fur with three dimensional textures](https://dl.acm.org/doi/pdf/10.1145/74334.74361): Paper describing the Kajiya-Kay shading model I used.
