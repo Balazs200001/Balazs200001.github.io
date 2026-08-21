@@ -1,0 +1,7 @@
+{%- if include.tags.size > 0 -%}
+<ul class="tag-list">
+  {%- for tag in include.tags -%}
+  <li><span class="tag tag--{{ tag | slugify }}">{{ tag }}</span></li>
+  {%- endfor -%}
+</ul>
+{%- endif -%}

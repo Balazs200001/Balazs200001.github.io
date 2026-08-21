@@ -1,4 +1,23 @@
+title: Balazs Fabian
+description: Graphics programming write-ups and experiments.
+
 remote_theme: pages-themes/midnight@v0.2.0
-title: How to Make Strand-Based Hair Rendering Fast
+
+permalink: /:title/
+
+defaults:
+  - scope:
+      type: posts
+    values:
+      layout: post
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - node_modules
+
 plugins:
 - jekyll-remote-theme
+- jekyll-seo-tag
