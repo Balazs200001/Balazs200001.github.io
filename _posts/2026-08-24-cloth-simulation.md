@@ -390,7 +390,7 @@ Two things I'm not happy with. Self collision is still very expensive. Detection
 
 - [[Kim et al. 2012] Long Range Attachments](https://www.researchgate.net/publication/235340926_Long_Range_Attachments_-_A_Method_to_Simulate_Inextensible_Clothing_in_Computer_Games): stopping a hanging sheet from stretching without paying for more iterations.
 
-- [Chris Lewin (GDC 2018) — Cloth Self Collision with Predictive Contacts](https://www.gdcvault.com/play/1025083/Cloth-Self-Collision-with-Predictive): the self-collision approach, and the reason detection runs once per step.
+- [Chris Lewin (GDC 2018) Cloth Self Collision with Predictive Contacts](https://www.gdcvault.com/play/1025083/Cloth-Self-Collision-with-Predictive): the self-collision approach, and the reason detection runs once per step.
 
 - [[Teschner et al. 2003] Optimized Spatial Hashing for Collision Detection of Deformable Objects](https://matthias-research.github.io/pages/publications/tetraederCollision.pdf): the broadphase.
 
