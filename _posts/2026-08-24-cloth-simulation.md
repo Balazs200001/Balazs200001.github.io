@@ -288,7 +288,7 @@ With the races gone, everything else was layout, and the theme is *stop gatherin
 - **SoA positions**, transposed once per step, so kernels do `pos_x[i]` instead of strided `3*i` reads.
 - **Per-constraint copies of the inverse masses.** `inv_mass[idx_a[i]]` is a gather; storing `w_a[i]` next to the constraint makes it a unit-stride load. Duplicating data to avoid an indirection feels wrong but measured clearly better.
 - **Slot-major tether payloads** with `-1` sentinels, so each slot is unit-stride and the kernel can `break` when `all(a < 0)`.
-- **Masked arithmetic instead of branches**, visible in the kernel above — inactive lanes compute something harmless and multiply it away rather than diverging.
+- **Masked arithmetic instead of branches**, visible in the kernel above inactive lanes compute something harmless and multiply it away rather than diverging.
 - **`uniform` scalars to skip whole blocks**, like `gamma` letting the entire gang skip the damping gathers when nothing is damped.
 
 ## Simulating a Coarse Mesh and Skinning the Dense One
