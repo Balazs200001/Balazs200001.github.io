@@ -100,9 +100,24 @@
   white-space: nowrap;
 }
 
-.tag--real-time-rendering { --tag-h: 172; }
-.tag--ps5 { --tag-h: 222; }
-.tag--mesh-shaders { --tag-h: 276; }
+.tag--real-time-rendering { 
+  --tag-h: 172; 
+}
+.tag--ps5 { 
+  --tag-h: 222; 
+}
+.tag--mesh-shaders { 
+  --tag-h: 276; 
+}
+.tag--real-time-physics { 
+  --tag-h: 20; --tag-s: 55%;
+}
+.tag--cpu { 
+  --tag-h: 150; --tag-s: 45%; 
+} 
+.tag--simd {
+  --tag-h: 200; --tag-s: 25%; 
+}
 
 .back-link {
   display: inline-flex;
@@ -192,4 +207,49 @@
   max-width: var(--wide);
   height: auto;
   border-radius: 4px;
+}
+
+.post-content h2,
+.post-content h3,
+.post-content h4 {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  color: #f5efe3;
+  line-height: 1.25;
+}
+
+.post-content h2 {
+  margin: 52px 0 16px;
+  padding: 0 0 8px;
+  border-bottom: 1px solid #3a3a38;
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+}
+
+.post-content h3 {
+  margin: 36px 0 12px;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+
+.post-content h4 {
+  margin: 28px 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #cfc6b4;
+}
+
+.post-content > h2:first-child,
+.post-content > h3:first-child {
+  margin-top: 0;
+}
+
+.post-header h1 {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 33px;
+  font-weight: 600;
+  line-height: 1.2;
 }

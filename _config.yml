@@ -1,5 +1,5 @@
 title: Balazs Fabian
-description: Graphics programming write-ups and experiments.
+description: Programming write-ups and experiments.
 
 remote_theme: pages-themes/midnight@v0.2.0
 
@@ -21,3 +21,6 @@ exclude:
 plugins:
 - jekyll-remote-theme
 - jekyll-seo-tag
+
+sass:
+  quiet_deps: true
