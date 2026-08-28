@@ -8,7 +8,7 @@ description: "An XPBD cloth solver that runs entirely on the CPU in ISPC: long r
 
 <video controls src="/assets/posts/cloth-simulation/in-scene-character.mp4" title="In scene character"></video>
 
-This post is about the work I did during my 8 week Summer of Code internship at [Traverse Research](https://traverse.nl/) where I worked on a cloth simulation system for the Breda framework. I had the limitations set for me that it had to run on the CPU, on a single thread and the goal of reaching a step time of < **0.5 ms** per 10k-vertex garment at 60 Hz. I implemented vertex pinning so that cloths can be attached to other world objects such as character bones, collision with capsules and planes and integrated the solver into an ECS so separate cloth instances can have different parameters and self collision.
+This post is about the work I did during my 8 week Summer of Code internship at [Traverse Research](https://traverse.nl/) where I worked on a cloth simulation system for the Breda framework. I had the limitations set for me that it had to run on the CPU, on a single thread and the goal of reaching a step time of < **0.5 ms** per 10k-vertex garment at 60 Hz. I implemented vertex pinning so that cloths can be attached to other world objects such as character bones, collision with capsules and planes, self collision and integrated the solver into an ECS so separate cloth instances can have different parameters.
 
 To achieve this performance goal I used [ISPC](https://ispc.github.io/) kernels for hot paths with [graph colouring](https://en.wikipedia.org/wiki/Graph_coloring) my constraints, implemented [Long Range Attachments](https://www.researchgate.net/publication/235340926_Long_Range_Attachments_-_A_Method_to_Simulate_Inextensible_Clothing_in_Computer_Games) to be able to reduce substep count and also simulating a separate coarse mesh and skinning the dense one on top of it to improve performance.
 
@@ -79,7 +79,7 @@ The second thing that matters is [Small Steps in Physics Simulation](https://mma
 
 ![alt text](/assets/posts/cloth-simulation/small-steps-proof.png)
 
-Substeps win, and not by a small margin because they result in significantly less stretching and better energy preservation shown in the picture above. The reason is that the velocity update at the end of each substep, more iterations inside a single step just push positions around without ever letting the velocities catch up.
+Substeps win, and not by a small margin because they result in significantly less stretching and better energy preservation shown in the picture above. The reason is the velocity update at the end of each substep, more iterations inside a single step just push positions around without ever letting the velocities catch up.
 
 I also tried to implement [Augmented Vertex Block Descent](https://graphics.cs.utah.edu/research/projects/avbd/Augmented_VBD-SIGGRAPH25.pdf) in an attempt to find some more performance, but after my initial implementation I measured the performance to be the same if not a bit worse than XPBD, which made more sense after reading Hallam Roberts writeup on their [VBD implementation in Houdini](https://github.com/MysteryPancake/Houdini-VBD) where in the section about [XPBD vs VBD performance](https://github.com/MysteryPancake/Houdini-VBD#is-vbd-faster-than-vellum-xpbd) they explain that VBD results in less graph colours but often doubles the amount of operations. So I decided to not put any more effort into that and stick with XPBD.
 
@@ -174,7 +174,7 @@ The two pictures below show tethers in action. Both pictures were taken with the
 
 The collider set is deliberately small: capsules and planes. Capsules cover limbs, torsos and props well enough that a character is a handful of them, and the closest-point test against a capsule is cheap enough that I don't run a broadphase at all. I also added planes to test out how dropping the cloth on the ground would react but I never got to make it look nice because the self collision wasn't really reacting well under that stress of dropping the cloth, but more on that later.
 
-Contact generation is **swept**. As well as checking for "is this vertex inside a capsule", I intersect the segment from the vertex's old position to its predicted position against the capsule.
+Contact generation is **swept**. I'm not just checking for "is this vertex inside a capsule", but I intersect the segment from the vertex's old position to its predicted position against the capsule.
 
 The projection ended up as three passes fused into one kernel, and each of them exists because of a specific failure I hit:
 
@@ -299,7 +299,7 @@ This is the change that mattered most and resulted in the most performance gain.
 
 So the solver runs on a coarse mesh and the render mesh is bound to it, like skeletal skinning with a triangle mesh for a skeleton. Three ways to get the coarse mesh: the render mesh itself when it's already cheap, an artist-authored coarse mesh baked out of the same glTF as a second mesh, or automatic meshopt simplification to a vertex budget using [meshopt-rs](https://github.com/gwihlidal/meshopt-rs).
 
-Flat barycentric interpolation of a coarse mesh looks like a coarse mesh, so the surface gets reconstructed with [Phong tessellation](https://perso.telecom-paristech.fr/boubek/papers/PhongTessellation/) instead. Project the flat point onto each corner's tangent plane, blend the three. Five lines on the CPU at bind time:
+Flat barycentric interpolation of a coarse mesh looks like a coarse mesh, so the surface gets reconstructed with [Phong tessellation](https://perso.telecom-paristech.fr/boubek/papers/PhongTessellation/) instead. Project the flat point onto each corner's tangent plane and blend the three. Five lines on the CPU at bind time:
 
 ```rust
 /// Must stay identical to the reconstruction in `cloth_skin.cs.hlsl`.
@@ -368,7 +368,7 @@ And the solver is driven through an ECS component, so every cloth instance in a 
 
 <video controls src="/assets/posts/cloth-simulation/ecs-demo.mp4" title="ECS demo"></video>
 
-Two things I'm not happy with. Self collision is still very expensive. Detection alone costs over 2 ms on a 32x32 sheet, which is more than the entire budget for a garment several times that size. The structural win from the predictive-contacts approach is in there, but I never went back and chased the constant factor the way I did for the rest of the solver, so it stays off by default. And the plane-drop case never got solid: dropping a cloth flat onto the ground puts a huge number of triangles into contact in the same step, and my self collision doesn't hold up under that, which is why every demo here has the cloth hanging rather than piling up.
+Two things I'm not happy with about the Self collision. First is that its still very expensive. Detection alone costs over 2 ms on a 32x32 sheet, which is more than the entire budget for a garment several times that size. The structural win from the predictive-contacts approach is in there, but I never went back and chased the constant factor the way I did for the rest of the solver, so it stays off by default. Secondly the plane-drop case never got solid: dropping a cloth flat onto the ground puts a huge number of triangles into contact in the same step, and my self collision doesn't hold up under that, which is why every demo here has the cloth hanging rather than piling up.
 
 ## Further improvements
 
